@@ -36,24 +36,32 @@ export function formatErrorMessage(err: any): string {
   try {
     const parsed = JSON.parse(rawMessage);
     if (parsed.error?.message) {
-      if (parsed.error.code === 503 || parsed.error.status === 'UNAVAILABLE') {
-        return 'The AI service is currently experiencing high demand. Please try again in a few moments.';
+      const msg = parsed.error.message;
+      if (parsed.error.code === 429 || parsed.error.status === 'RESOURCE_EXHAUSTED' || msg.includes('quota') || msg.includes('rate-limits')) {
+        return 'Rate limit or free-tier quota exceeded for your Gemini API key. Please check your Google AI Studio plan or retry shortly.';
       }
-      if (parsed.error.code === 429 || parsed.error.status === 'RESOURCE_EXHAUSTED') {
-        return 'Rate limit reached. Please wait a moment before sending another request.';
+      if (parsed.error.code === 503 || parsed.error.status === 'UNAVAILABLE' || msg.includes('high demand') || msg.includes('overloaded')) {
+        return 'The AI service is experiencing high temporary demand across Google servers. Please try again in a few moments.';
       }
-      return parsed.error.message;
+      if (parsed.error.code === 400 && (msg.includes('API_KEY_INVALID') || msg.includes('API key not valid'))) {
+        return 'Invalid Gemini API key. Please check your GEMINI_API_KEY environment variable in Vercel.';
+      }
+      return msg;
     }
   } catch {
     // Not JSON, continue to string pattern checks
   }
 
-  if (rawMessage.includes('503') || rawMessage.includes('UNAVAILABLE') || rawMessage.includes('high demand')) {
+  if (rawMessage.includes('quota') || rawMessage.includes('RESOURCE_EXHAUSTED') || rawMessage.includes('rate-limits')) {
+    return 'Rate limit or free-tier quota exceeded for your Gemini API key. Please check your Google AI Studio plan or retry shortly.';
+  }
+
+  if (rawMessage.includes('503') || rawMessage.includes('UNAVAILABLE') || rawMessage.includes('high demand') || rawMessage.includes('overloaded')) {
     return 'The AI service is currently experiencing high demand. Please try again in a few moments.';
   }
 
-  if (rawMessage.includes('429') || rawMessage.includes('RESOURCE_EXHAUSTED')) {
-    return 'Rate limit reached. Please wait a moment before sending another request.';
+  if (rawMessage.includes('API_KEY_INVALID') || rawMessage.includes('API key not valid')) {
+    return 'Invalid Gemini API key. Please verify GEMINI_API_KEY in your Vercel Project Settings > Environment Variables.';
   }
 
   if (rawMessage.includes('GEMINI_API_KEY is not configured')) {
@@ -70,7 +78,16 @@ export async function generateWithFallback(
     config?: any;
   }
 ) {
-  const models = ['gemini-3.8-flash', 'gemini-flash-latest'];
+  // Ordered sequence of production-ready Gemini models:
+  // Starts with high-throughput, low-latency models with high daily free-tier quotas,
+  // automatically falling back if one experiences 503 high demand or 429 quota exhaustion.
+  const models = [
+    'gemini-3.5-flash',
+    'gemini-flash-lite-latest',
+    'gemini-3.1-flash-lite',
+    'gemini-2.5-flash-lite',
+    'gemini-3.8-flash',
+  ];
 
   let lastError: any = null;
   for (const model of models) {
@@ -83,18 +100,27 @@ export async function generateWithFallback(
       return response;
     } catch (err: any) {
       lastError = err;
+      const errMsg = err?.message || String(err);
+      console.warn(`[SkillBridge AI] Model ${model} encountered an issue: ${errMsg.slice(0, 120)}. Trying fallback model...`);
+
       const isTransient =
-        err?.message?.includes('503') ||
-        err?.message?.includes('UNAVAILABLE') ||
-        err?.message?.includes('high demand') ||
-        err?.message?.includes('429');
+        errMsg.includes('503') ||
+        errMsg.includes('UNAVAILABLE') ||
+        errMsg.includes('high demand') ||
+        errMsg.includes('overloaded') ||
+        errMsg.includes('429') ||
+        errMsg.includes('RESOURCE_EXHAUSTED') ||
+        errMsg.includes('quota') ||
+        errMsg.includes('404') ||
+        errMsg.includes('not found');
 
       if (isTransient) {
-        // Wait 600ms before attempting next model
-        await new Promise((resolve) => setTimeout(resolve, 600));
+        // Brief pause before trying next fallback model
+        await new Promise((resolve) => setTimeout(resolve, 300));
         continue;
       }
-      // Non-transient error, throw immediately
+
+      // If it's a fatal non-transient error (e.g. invalid auth), throw immediately
       throw err;
     }
   }
