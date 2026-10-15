@@ -1,0 +1,7 @@
+{
+  "name": "SkillBridge AI",
+  "description": "AI-powered learning and skill development platform for students. Learn concepts, generate study schedules, take practice quizzes, and explore career roadmaps.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
