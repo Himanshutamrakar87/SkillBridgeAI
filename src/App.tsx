@@ -9,6 +9,7 @@ import { CareerGuidanceView } from './components/CareerGuidanceView';
 import { ActiveTab, SessionActivity } from './types';
 import { checkServerHealth } from './services/api';
 import { GraduationCap } from 'lucide-react';
+import { SkillBridgeLogo } from './components/SkillBridgeLogo';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
@@ -168,11 +169,9 @@ export default function App() {
       <footer className="border-t border-slate-200/90 bg-white py-8 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white text-[10px] font-bold shadow-2xs">
-              SB
-            </div>
+            <SkillBridgeLogo size={24} />
             <span className="font-display font-semibold text-slate-800">
-              SkillBridge AI
+              SkillBridge <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600 font-bold">AI</span>
             </span>
             <span className="text-slate-300">·</span>
             <span className="text-slate-500">

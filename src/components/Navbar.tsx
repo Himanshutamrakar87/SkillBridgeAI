@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { ActiveTab } from '../types';
 
+import { SkillBridgeLogo } from './SkillBridgeLogo';
+
 interface NavbarProps {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
@@ -46,24 +48,23 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
           
-          {/* Zone 1: Brand Wordmark */}
+          {/* Zone 1: Brand Wordmark with Unique Logo */}
           <div className="flex items-center gap-3 shrink-0">
             <button
               type="button"
               onClick={() => handleNavClick('dashboard')}
-              className="flex items-center gap-2.5 text-left group"
+              className="flex items-center gap-2.5 text-left group transition-opacity hover:opacity-95"
+              aria-label="SkillBridge AI Home"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-600 p-0.5 shadow-md shadow-indigo-500/20">
-                <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-indigo-600 group-hover:rotate-12 transition-transform duration-300" />
-                </div>
+              <div className="p-1 rounded-xl bg-gradient-to-br from-indigo-50 to-violet-50/80 border border-indigo-100/80 group-hover:border-indigo-200 transition-colors shadow-2xs">
+                <SkillBridgeLogo size={34} animated={true} />
               </div>
               <div className="flex flex-col">
-                <span className="font-display font-bold text-lg text-slate-900 tracking-tight flex items-center gap-1">
-                  SkillBridge <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">AI</span>
+                <span className="font-display font-bold text-lg text-slate-900 tracking-tight flex items-center gap-1 leading-tight">
+                  SkillBridge <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-700">AI</span>
                 </span>
                 <span className="text-[10px] text-slate-500 tracking-wider uppercase font-semibold">
-                  Student Learning Platform
+                  Smart Learning Platform
                 </span>
               </div>
             </button>

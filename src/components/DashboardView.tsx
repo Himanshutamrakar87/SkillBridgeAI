@@ -16,6 +16,7 @@ import {
   Award
 } from 'lucide-react';
 import { ActiveTab, SessionActivity } from '../types';
+import { SkillBridgeLogo } from './SkillBridgeLogo';
 
 interface DashboardViewProps {
   onNavigate: (tab: ActiveTab) => void;
@@ -150,50 +151,77 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-300/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-sky-300/20 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/80 border border-indigo-100 text-indigo-700 text-xs font-semibold tracking-wide uppercase mb-4 shadow-2xs backdrop-blur-xs">
-            <GraduationCap className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Intelligent Student Learning Platform</span>
+        <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/80 border border-indigo-100 text-indigo-700 text-xs font-semibold tracking-wide uppercase mb-4 shadow-2xs backdrop-blur-xs">
+              <GraduationCap className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Intelligent Student Learning Platform</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-slate-900 tracking-tight leading-tight">
+              SkillBridge <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-700">AI</span>
+            </h1>
+
+            <p className="mt-2 text-lg sm:text-xl font-medium text-indigo-700 font-display">
+              "Learn Smarter. Build Skills. Shape Your Future."
+            </p>
+
+            <p className="mt-3 text-slate-600 text-sm sm:text-base leading-relaxed">
+              A comprehensive educational workspace designed for students to master difficult concepts, plan realistic study milestones, test knowledge retention, and receive personalized career guidance.
+            </p>
+
+            {/* Quick Action buttons */}
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => onNavigate('assistant')}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 transition-all shadow-sm hover:shadow-md shadow-indigo-500/25"
+              >
+                <Sparkles className="w-4 h-4 text-sky-200" />
+                <span>Ask AI Mentor</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onNavigate('quiz')}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-all shadow-2xs"
+              >
+                <HelpCircle className="w-4 h-4 text-amber-600" />
+                <span>Take Practice Quiz</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onNavigate('planner')}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-all shadow-2xs"
+              >
+                <Calendar className="w-4 h-4 text-sky-600" />
+                <span>Create Study Plan</span>
+              </button>
+            </div>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-slate-900 tracking-tight leading-tight">
-            SkillBridge <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-700">AI</span>
-          </h1>
-
-          <p className="mt-2 text-lg sm:text-xl font-medium text-indigo-700 font-display">
-            "Learn Smarter. Build Skills. Shape Your Future."
-          </p>
-
-          <p className="mt-3 text-slate-600 text-sm sm:text-base leading-relaxed">
-            A comprehensive educational workspace designed for students to master difficult concepts, plan realistic study milestones, test knowledge retention, and receive personalized career guidance.
-          </p>
-
-          {/* Quick Action buttons */}
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => onNavigate('assistant')}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 transition-all shadow-sm hover:shadow-md shadow-indigo-500/25"
-            >
-              <Sparkles className="w-4 h-4 text-sky-200" />
-              <span>Ask AI Mentor</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => onNavigate('quiz')}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-all shadow-2xs"
-            >
-              <HelpCircle className="w-4 h-4 text-amber-600" />
-              <span>Take Practice Quiz</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => onNavigate('planner')}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-all shadow-2xs"
-            >
-              <Calendar className="w-4 h-4 text-sky-600" />
-              <span>Create Study Plan</span>
-            </button>
+          {/* Unique SkillBridge Brand Emblem Card */}
+          <div className="shrink-0 w-full sm:w-auto lg:w-72 p-5 rounded-2xl bg-white/85 backdrop-blur-md border border-indigo-100/90 shadow-md shadow-indigo-500/5 flex flex-col items-center text-center self-center lg:self-auto">
+            <div className="relative p-3 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/80 border border-indigo-100/70 shadow-inner mb-3">
+              <SkillBridgeLogo size={76} animated={true} />
+            </div>
+            <div className="flex items-center gap-1.5 font-display font-bold text-slate-900 text-base">
+              <span>SkillBridge</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">AI</span>
+            </div>
+            <p className="text-xs text-slate-500 mt-1 max-w-[210px] leading-relaxed">
+              Bridging student fundamentals to high-growth career mastery
+            </p>
+            <div className="mt-3 pt-3 border-t border-slate-100 w-full flex items-center justify-around text-[11px] font-medium text-slate-600">
+              <span className="flex items-center gap-1 text-indigo-600">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+                Skill Paths
+              </span>
+              <span className="text-slate-300">•</span>
+              <span className="flex items-center gap-1 text-violet-600">
+                <span className="w-1.5 h-1.5 rounded-full bg-violet-600"></span>
+                AI Mentor
+              </span>
+            </div>
           </div>
         </div>
       </div>
